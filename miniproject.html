@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyBuddy - Ultimate Academic Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/favicon.ico">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            color: #e5e7eb;
+            background: #0f172a;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-theme {
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .neumorphic {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 1rem;
+            box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.3), -8px -8px 16px rgba(71, 85, 105, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .light-theme .neumorphic {
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1), -8px -8px 16px rgba(255, 255, 255, 0.5);
+        }
+        .neumorphic:hover {
+            transform: translateY(-2px);
+            box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.4), -12px -12px 24px rgba(106, 149, 210, 0.3);
+        }
+        .light-theme .neumorphic:hover {
+            box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.2), -12px -12px 24px rgba(14, 12, 12, 0.7);
+        }
+        .bca-theme { background: linear-gradient(135deg, #7c3aed, #d8b4fe); }
+        .bba-theme { background: linear-gradient(135deg, #ef4444, #fca5a5); }
+        .btech-theme { background: linear-gradient(135deg, #059669, #6ee7b7); }
+        .mtech-theme { background: linear-gradient(135deg, #2563eb, #93c5fd); }
+        .mba-theme { background: linear-gradient(135deg, #dc2626, #f87171); }
+        .law-theme { background: linear-gradient(135deg, #475569, #cbd5e1); }
+        .class11-12-theme { background: linear-gradient(135deg, #f59e0b, #fef08a); }
+        .task-slot, .fc-daygrid-day, .fc-timegrid-slot {
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .quiz-option:hover {
+            transform: scale(1.05);
+        }
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 1rem;
+        }
+        .dropdown-menu {
+            position: absolute;
+            z-index: 20;
+            width: 220px;
+            top: 100%;
+            left: 0;
+        }
+        #welcome-section, #dashboard, #timetable-page, #note-editor-page, #calendar-page {
+            background: rgba(15, 23, 42, 0.85);
+        }
+        .light-theme #welcome-section, .light-theme #dashboard, .light-theme #timetable-page, .light-theme #note-editor-page, .light-theme #calendar-page {
+            background: rgba(248, 250, 252, 0.85);
+        }
+        input, select {
+            background: #e5e7eb;
+            color: #111827;
+            border: 1px solid #4b5563;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .light-theme input, .light-theme select {
+            background: #e2e8f0;
+            border: 1px solid #64748b;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        input::placeholder {
+            color: #6b7280;
+        }
+        button {
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23111827' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.2rem;
+        }
+        .ql-container {
+            min-height: 200px;
+            background: #e5e7eb;
+            color: #111827;
+            border-radius: 0.5rem;
+        }
+        .light-theme .ql-container {
+            background: #e2e8f0;
+        }
+        .ql-toolbar {
+            background: #1e293b;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        .light-theme .ql-toolbar {
+            background: #e2e8f0;
+        }
+        .progress-bar {
+            background: #1e293b;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .light-theme .progress-bar {
+            background: #e2e8f0;
+        }
+        .progress-fill {
+            background: #3b82f6;
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+        .badge {
+            background: linear-gradient(135deg, #f59e0b, #fef08a);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            color: #1e293b;
+            font-weight: 600;
+        }
+        .fc-theme-standard .fc-scrollgrid {
+            background: transparent;
+        }
+        .fc-daygrid-day:hover, .fc-timegrid-slot:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 30;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle p-2 bg-blue-600 rounded-full text-white">
+        <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+    </button>
+
+    <!-- Interactive Particle Background -->
+    <div id="particles-js"></div>
+
+    <!-- Welcome Section -->
+    <div id="welcome-section" class="min-h-screen flex items-center justify-center p-4">
+        <div class="neumorphic p-8 rounded-2xl max-w-md w-full text-center">
+            <h1 class="text-4xl font-bold mb-4 text-white light-theme:text-gray-900">StudyBuddy</h1>
+            <p class="text-lg mb-6 text-gray-300 light-theme:text-gray-600">Your ultimate academic companion</p>
+            <form id="user-form" class="space-y-4">
+                <input type="text" id="name" placeholder="Your Name" class="w-full" required>
+                <input type="text" id="university" placeholder="Your University" class="w-full" required>
+                <select id="course" class="w-full" required>
+                    <option value="" disabled selected>Select Course</option>
+                    <option value="bca">BCA</option>
+                    <option value="bba">BBA</option>
+                    <option value="btech">B.Tech</option>
+                    <option value="mtech">M.Tech</option>
+                    <option value="mba">MBA</option>
+                    <option value="law">Law</option>
+                    <option value="class11-12">Class 11-12</option>
+                </select>
+                <select id="year" class="w-full" required>
+                    <option value="" disabled selected>Select Year</option>
+                </select>
+                <button type="submit" class="w-full p-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold neumorphic">Start Learning</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden min-h-screen p-4">
+        <header class="flex flex-col sm:flex-row justify-between items-center p-4 neumorphic rounded-xl mb-6">
+            <h1 class="text-3xl font-bold text-white light-theme:text-gray-900 mb-4 sm:mb-0">StudyBuddy Dashboard</h1>
+            <div class="flex flex-wrap gap-2">
+                <div class="dropdown-container">
+                    <button class="p-2 bg-blue-600 rounded-lg text-white">Timetable</button>
+                    <div id="timetable-dropdown" class="dropdown-menu hidden neumorphic rounded-lg p-2">
+                        <button onclick="loadTimetablePage()" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">View Timetable</button>
+                        <button onclick="loadCalendarPage()" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">Calendar View</button>
+                    </div>
+                </div>
+                <div class="dropdown-container">
+                    <button class="p-2 bg-blue-600 rounded-lg text-white">Notes</button>
+                    <div id="notes-dropdown" class="dropdown-menu hidden neumorphic rounded-lg p-2">
+                        <button onclick="loadContent('notes')" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">View Notes</button>
+                        <button onclick="loadNoteEditor()" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">Create Note</button>
+                    </div>
+                </div>
+                <div class="dropdown-container">
+                    <button class="p-2 bg-blue-600 rounded-lg text-white">Papers</button>
+                    <div id="papers-dropdown" class="dropdown-menu hidden neumorphic rounded-lg p-2">
+                        <button onclick="loadContent('papers')" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">View Papers</button>
+                        <button onclick="uploadFile('paper')" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">Upload Paper</button>
+                    </div>
+                </div>
+                <div class="dropdown-container">
+                    <button class="p-2 bg-blue-600 rounded-lg text-white">Quizzes</button>
+                    <div id="quizzes-dropdown" class="dropdown-menu hidden neumorphic rounded-lg p-2">
+                        <button onclick="loadContent('quizzes')" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">Take Quiz</button>
+                    </div>
+                </div>
+                <div class="dropdown-container">
+                    <button class="p-2 bg-blue-600 rounded-lg text-white">Syllabus</button>
+                    <div id="syllabus-dropdown" class="dropdown-menu hidden neumorphic rounded-lg p-2">
+                        <button onclick="loadContent('syllabus')" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">View Syllabus</button>
+                    </div>
+                </div>
+                <div class="dropdown-container">
+                    <button class="p-2 bg-blue-600 rounded-lg text-white">Tools</button>
+                    <div id="tools-dropdown" class="dropdown-menu hidden neumorphic rounded-lg p-2">
+                        <button onclick="startStudyTimer()" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">Study Timer</button>
+                        <button onclick="viewProgress()" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">Progress Tracker</button>
+                        <button onclick="viewBadges()" class="w-full p-2 text-left hover:bg-blue-500 hover:bg-opacity-20 rounded text-gray-200 light-theme:text-gray-700">View Badges</button>
+                    </div>
+                </div>
+                <button id="logout-btn" class="p-2 bg-red-600 hover:bg-red-700 rounded-lg text-white">Logout</button>
+            </div>
+        </header>
+        <div id="content-area" class="neumorphic p-6 rounded-xl">
+        </div>
+    </div>
+
+    <!-- Timetable Page -->
+    <div id="timetable-page" class="hidden min-h-screen p-4">
+        <header class="flex justify-between items-center p-4 neumorphic rounded-xl mb-6">
+            <h1 class="text-3xl font-bold text-white light-theme:text-gray-900">Timetable Manager</h1>
+            <button id="back-btn" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Back to Dashboard</button>
+        </header>
+        <div class="neumorphic p-6 rounded-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">Manage Your Tasks</h2>
+            <button id="add-task-btn" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white mb-4">Add New Task</button>
+            <div id="timetable-visualizer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4"></div>
+        </div>
+    </div>
+
+    <!-- Note Editor Page -->
+    <div id="note-editor-page" class="hidden min-h-screen p-4">
+        <header class="flex justify-between items-center p-4 neumorphic rounded-xl mb-6">
+            <h1 class="text-3xl font-bold text-white light-theme:text-gray-900">Note Editor</h1>
+            <button id="back-to-dashboard" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Back to Dashboard</button>
+        </header>
+        <div class="neumorphic p-6 rounded-xl">
+            <input id="note-title" type="text" placeholder="Note Title" class="w-full mb-4">
+            <div id="editor" class="w-full"></div>
+            <button id="save-note" class="mt-4 p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Save Note</button>
+        </div>
+    </div>
+
+    <!-- Calendar Page -->
+    <div id="calendar-page" class="hidden min-h-screen p-4">
+        <header class="flex justify-between items-center p-4 neumorphic rounded-xl mb-6">
+            <h1 class="text-3xl font-bold text-white light-theme:text-gray-900">Task Calendar</h1>
+            <button id="back-to-dashboard-calendar" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Back to Dashboard</button>
+        </header>
+        <div class="neumorphic p-6 rounded-xl">
+            <div id="calendar"></div>
+        </div>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="neumorphic p-6 rounded-xl w-full max-w-md">
+            <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">Add Task</h2>
+            <form id="task-form" class="space-y-4">
+                <select id="day" class="w-full" required>
+                    <option value="" disabled selected>Select Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+                <input type="date" id="date" class="w-full" required>
+                <input type="time" id="time" class="w-full" required>
+                <input type="text" id="subject" placeholder="Task/Subject" class="w-full" required>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="cancel-task" class="p-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-white">Cancel</button>
+                    <button type="submit" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Study Timer Modal -->
+    <div id="study-timer-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="neumorphic p-6 rounded-xl w-full max-w-md">
+            <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">Study Timer</h2>
+            <div class="text-4xl font-bold text-white light-theme:text-gray-900 text-center mb-4" id="timer-display">25:00</div>
+            <div class="flex justify-center space-x-2">
+                <button id="start-timer" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Start</button>
+                <button id="reset-timer" class="p-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-white">Reset</button>
+                <button id="close-timer" class="p-2 bg-red-600 hover:bg-red-700 rounded-lg text-white">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Upload Modal -->
+    <div id="file-upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="neumorphic p-6 rounded-xl w-full max-w-md">
+            <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900" id="file-upload-title">Upload File</h2>
+            <form id="file-upload-form" class="space-y-4">
+                <input type="file" id="file-input" class="w-full" accept=".pdf,.doc,.docx" required>
+                <input type="text" id="file-name" placeholder="File Name" class="w-full" required>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="cancel-upload" class="p-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-white">Cancel</button>
+                    <button type="submit" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        let isLightTheme = localStorage.getItem('theme') === 'light';
+        if (isLightTheme) {
+            document.body.classList.add('light-theme');
+            themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />';
+        }
+        themeToggle.addEventListener('click', () => {
+            isLightTheme = !isLightTheme;
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem('theme', isLightTheme ? 'light' : 'dark');
+            themeIcon.innerHTML = isLightTheme
+                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />'
+                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+        });
+
+        // Course-Specific Particle Colors
+        const courseParticleColors = {
+            bca: ['#7c3aed', '#d8b4fe'],
+            bba: ['#ef4444', '#fca5a5'],
+            btech: ['#059669', '#6ee7b7'],
+            mtech: ['#2563eb', '#93c5fd'],
+            mba: ['#dc2626', '#f87171'],
+            law: ['#475569', '#cbd5e1'],
+            'class11-12': ['#f59e0b', '#fef08a']
+        };
+
+        // Initialize Particles
+        function initParticles(course = null) {
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 120, density: { enable: true, value_area: 800 } },
+                    color: { value: course ? courseParticleColors[course] : ['#93c5fd', '#f59e0b', '#ef4444'] },
+                    shape: { type: ['circle', 'triangle', 'star'] },
+                    opacity: { value: 0.8, random: true },
+                    size: { value: 4, random: true },
+                    line_linked: { enable: true, distance: 100, color: course ? courseParticleColors[course][0] : '#93c5fd', opacity: 0.5, width: 1.5 },
+                    move: { enable: true, speed: 5, direction: 'none', random: true, straight: false, out_mode: 'out' }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: true, mode: ['grab', 'bubble'] },
+                        onclick: { enable: true, mode: 'push' },
+                        resize: true
+                    },
+                    modes: {
+                        grab: { distance: 200, line_linked: { opacity: 0.7 } },
+                        bubble: { distance: 200, size: 6, duration: 2, opacity: 0.6 },
+                        push: { particles_nb: 6 }
+                    }
+                },
+                retina_detect: true
+            });
+        }
+        initParticles();
+
+        // GSAP Animations
+        gsap.from("#welcome-section h1", { opacity: 0, y: -50, duration: 1, delay: 0.5 });
+        gsap.from("#welcome-section p", { opacity: 0, y: 50, duration: 1, delay: 0.7 });
+        gsap.from("#user-form", { opacity: 0, scale: 0.8, duration: 1, delay: 0.9 });
+
+        // Course Data with Years
+        const courseData = {
+            bca: {
+                years: {
+                    1: {
+                        subjects: ["Programming in C", "Mathematics I", "Digital Electronics"],
+                        notes: ["C Programming Basics", "Maths Algebra Notes"],
+                        papers: ["BCA Year 1 2024 Paper", "BCA Year 1 2023 Paper"],
+                        quizzes: [
+                            { question: "What is a pointer in C?", options: ["Variable", "Function", "Address", "Constant"], answer: "Address" }
+                        ],
+                        syllabus: "BCA Year 1: C Programming, Maths, Electronics"
+                    },
+                    2: {
+                        subjects: ["Data Structures", "Java Programming", "DBMS"],
+                        notes: ["Data Structures Notes", "Java OOP Concepts"],
+                        papers: ["BCA Year 2 2024 Paper", "BCA Year 2 2023 Paper"],
+                        quizzes: [
+                            { question: "What is SQL?", options: ["Database", "Query Language", "Framework", "Library"], answer: "Query Language" }
+                        ],
+                        syllabus: "BCA Year 2: Data Structures, Java, DBMS"
+                    },
+                    3: {
+                        subjects: ["Web Development", "Software Engineering", "Networking"],
+                        notes: ["HTML & CSS Notes", "Software Engineering Principles"],
+                        papers: ["BCA Year 3 2024 Paper", "BCA Year 3 2023 Paper"],
+                        quizzes: [
+                            { question: "What is HTTP?", options: ["Protocol", "Database", "Language", "Framework"], answer: "Protocol" }
+                        ],
+                        syllabus: "BCA Year 3: Web Tech, Software Engineering, Networking"
+                    }
+                }
+            },
+            bba: {
+                years: {
+                    1: {
+                        subjects: ["Business Economics", "Financial Accounting", "Management Principles"],
+                        notes: ["Economics Basics", "Accounting Notes"],
+                        papers: ["BBA Year 1 2024 Paper", "BBA Year 1 2023 Paper"],
+                        quizzes: [
+                            { question: "What is GDP?", options: ["Gross Domestic Product", "General Demand Policy", "Global Development Plan", "Gross Demand Profit"], answer: "Gross Domestic Product" }
+                        ],
+                        syllabus: "BBA Year 1: Economics, Accounting, Management"
+                    },
+                    2: {
+                        subjects: ["Marketing Management", "Business Law", "HR Management"],
+                        notes: ["Marketing Strategies", "Business Law Notes"],
+                        papers: ["BBA Year 2 2024 Paper", "BBA Year 2 2023 Paper"],
+                        quizzes: [
+                            { question: "What is SWOT?", options: ["Analysis Tool", "Marketing Strategy", "Financial Metric", "Management Style"], answer: "Analysis Tool" }
+                        ],
+                        syllabus: "BBA Year 2: Marketing, Law, HR"
+                    },
+                    3: {
+                        subjects: ["Strategic Management", "Entrepreneurship", "Finance"],
+                        notes: ["Strategic Planning", "Entrepreneurship Basics"],
+                        papers: ["BBA Year 3 2024 Paper", "BBA Year 3 2023 Paper"],
+                        quizzes: [
+                            { question: "What is ROI?", options: ["Return on Investment", "Rate of Interest", "Revenue Output", "Risk of Investment"], answer: "Return on Investment" }
+                        ],
+                        syllabus: "BBA Year 3: Strategy, Entrepreneurship, Finance"
+                    }
+                }
+            },
+            btech: {
+                years: {
+                    1: {
+                        subjects: ["Engineering Maths", "Physics", "Basic Electronics"],
+                        notes: ["Maths Calculus Notes", "Physics Mechanics"],
+                        papers: ["B.Tech Year 1 2024 Paper", "B.Tech Year 1 2023 Paper"],
+                        quizzes: [
+                            { question: "What is Newton's First Law?", options: ["Inertia", "Acceleration", "Force", "Momentum"], answer: "Inertia" }
+                        ],
+                        syllabus: "B.Tech Year 1: Maths, Physics, Electronics"
+                    },
+                    2: {
+                        subjects: ["Data Structures", "Circuits", "Mechanics"],
+                        notes: ["Data Structures Notes", "Circuit Theory"],
+                        papers: ["B.Tech Year 2 2024 Paper", "B.Tech Year 2 2023 Paper"],
+                        quizzes: [
+                            { question: "What is a linked list?", options: ["Array", "Tree", "Queue", "Linked List"], answer: "Linked List" }
+                        ],
+                        syllabus: "B.Tech Year 2: Data Structures, Circuits, Mechanics"
+                    },
+                    3: {
+                        subjects: ["Microprocessors", "Control Systems", "Algorithms"],
+                        notes: ["Microprocessor Architecture", "Control Systems Notes"],
+                        papers: ["B.Tech Year 3 2024 Paper", "B.Tech Year 3 2023 Paper"],
+                        quizzes: [
+                            { question: "What is a transistor?", options: ["Amplifier", "Resistor", "Capacitor", "Diode"], answer: "Amplifier" }
+                        ],
+                        syllabus: "B.Tech Year 3: Microprocessors, Control Systems, Algorithms"
+                    },
+                    4: {
+                        subjects: ["VLSI Design", "AI Basics", "Project Management"],
+                        notes: ["VLSI Notes", "AI Fundamentals"],
+                        papers: ["B.Tech Year 4 2024 Paper", "B.Tech Year 4 2023 Paper"],
+                        quizzes: [
+                            { question: "What is VLSI?", options: ["Integrated Circuit", "Software", "Network", "Database"], answer: "Integrated Circuit" }
+                        ],
+                        syllabus: "B.Tech Year 4: VLSI, AI, Project Management"
+                    }
+                }
+            },
+            mtech: {
+                years: {
+                    1: {
+                        subjects: ["Advanced Algorithms", "Machine Learning", "Research Methodology"],
+                        notes: ["Algorithm Design", "ML Basics"],
+                        papers: ["M.Tech Year 1 2024 Paper", "M.Tech Year 1 2023 Paper"],
+                        quizzes: [
+                            { question: "What is gradient descent?", options: ["Optimization", "Encryption", "Compression", "Sorting"], answer: "Optimization" }
+                        ],
+                        syllabus: "M.Tech Year 1: Algorithms, ML, Research"
+                    },
+                    2: {
+                        subjects: ["Deep Learning", "Cloud Computing", "Thesis Work"],
+                        notes: ["Deep Learning Notes", "Cloud Architecture"],
+                        papers: ["M.Tech Year 2 2024 Paper", "M.Tech Year 2 2023 Paper"],
+                        quizzes: [
+                            { question: "What is Deep Learning?", options: ["ML Subset", "Database", "Networking", "Security"], answer: "ML Subset" }
+                        ],
+                        syllabus: "M.Tech Year 2: Deep Learning, Cloud, Thesis"
+                    }
+                }
+            },
+            mba: {
+                years: {
+                    1: {
+                        subjects: ["Organizational Behavior", "Marketing Management", "Financial Accounting"],
+                        notes: ["OB Theories", "Marketing Strategies"],
+                        papers: ["MBA Year 1 2024 Paper", "MBA Year 1 2023 Paper"],
+                        quizzes: [
+                            { question: "What is a balance sheet?", options: ["Financial Statement", "Marketing Plan", "HR Policy", "Strategy"], answer: "Financial Statement" }
+                        ],
+                        syllabus: "MBA Year 1: OB, Marketing, Accounting"
+                    },
+                    2: {
+                        subjects: ["Strategic Management", "Operations", "Finance"],
+                        notes: ["Strategic Planning", "Operations Management"],
+                        papers: ["MBA Year 2 2024 Paper", "MBA Year 2 2023 Paper"],
+                        quizzes: [
+                            { question: "What is ROI?", options: ["Return on Investment", "Rate of Interest", "Revenue Output", "Risk of Investment"], answer: "Return on Investment" }
+                        ],
+                        syllabus: "MBA Year 2: Strategy, Operations, Finance"
+                    }
+                }
+            },
+            law: {
+                years: {
+                    1: {
+                        subjects: ["Constitutional Law", "Contract Law", "Legal Methods"],
+                        notes: ["Constitution Basics", "Contract Law Notes"],
+                        papers: ["Law Year 1 2024 Paper", "Law Year 1 2023 Paper"],
+                        quizzes: [
+                            { question: "What is a statute?", options: ["Written Law", "Case Law", "Custom", "Treaty"], answer: "Written Law" }
+                        ],
+                        syllabus: "Law Year 1: Constitutional, Contract, Legal Methods"
+                    },
+                    2: {
+                        subjects: ["Criminal Law", "Torts", "Property Law"],
+                        notes: ["Criminal Law Notes", "Torts Basics"],
+                        papers: ["Law Year 2 2024 Paper", "Law Year 2 2023 Paper"],
+                        quizzes: [
+                            { question: "What is a tort?", options: ["Civil Wrong", "Criminal Act", "Contract", "Statute"], answer: "Civil Wrong" }
+                        ],
+                        syllabus: "Law Year 2: Criminal, Torts, Property"
+                    },
+                    3: {
+                        subjects: ["Family Law", "Corporate Law", "Evidence"],
+                        notes: ["Family Law Notes", "Corporate Law Basics"],
+                        papers: ["Law Year 3 2024 Paper", "Law Year 3 2023 Paper"],
+                        quizzes: [
+                            { question: "What is hearsay?", options: ["Evidence", "Contract", "Tort", "Statute"], answer: "Evidence" }
+                        ],
+                        syllabus: "Law Year 3: Family, Corporate, Evidence"
+                    },
+                    4: {
+                        subjects: ["International Law", "Taxation", "Human Rights"],
+                        notes: ["International Law Notes", "Taxation Basics"],
+                        papers: ["Law Year 4 2024 Paper", "Law Year 4 2023 Paper"],
+                        quizzes: [
+                            { question: "What is the UN Charter?", options: ["Treaty", "Statute", "Case Law", "Custom"], answer: "Treaty" }
+                        ],
+                        syllabus: "Law Year 4: International, Taxation, Human Rights"
+                    },
+                    5: {
+                        subjects: ["Advocacy", "Arbitration", "Legal Ethics"],
+                        notes: ["Advocacy Skills", "Arbitration Notes"],
+                        papers: ["Law Year 5 2024 Paper", "Law Year 5 2023 Paper"],
+                        quizzes: [
+                            { question: "What is arbitration?", options: ["Dispute Resolution", "Contract", "Tort", "Evidence"], answer: "Dispute Resolution" }
+                        ],
+                        syllabus: "Law Year 5: Advocacy, Arbitration, Ethics"
+                    }
+                }
+            },
+            "class11-12": {
+                years: {
+                    11: {
+                        subjects: ["Physics", "Chemistry", "Mathematics"],
+                        notes: ["Mechanics", "Organic Chemistry Basics"],
+                        papers: ["Class 11 2024 Paper", "Class 11 2023 Paper"],
+                        quizzes: [
+                            { question: "What is Newton's First Law?", options: ["Inertia", "Acceleration", "Force"], answer: "Inertia" }
+                        ],
+                        syllabus: "Class 11: Physics, Chemistry, Mathematics"
+                    },
+                    12: {
+                        subjects: ["Physics", "Chemistry", "Mathematics"],
+                        notes: ["Electromagnetism Notes", "Physical Chemistry"],
+                        papers: ["Class 12 2024 Paper", "Class 12 2023 Paper"],
+                        quizzes: [
+                            { question: "What is a derivative?", options: ["Rate of Change", "Integral", "Constant"], answer: "Rate of Change" }
+                        ],
+                        syllabus: "Class 12: Physics, Chemistry, Mathematics"
+                    }
+                }
+            }
+        };
+
+        // Local Storage for Data
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let customNotes = JSON.parse(localStorage.getItem('customNotes')) || [];
+        let uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
+        let progress = JSON.parse(localStorage.getItem('progress')) || { quizzes: 0, studyTime: 0, tasks: 0 };
+        let badges = JSON.parse(localStorage.getItem('badges')) || [];
+
+        // Dynamic Year Selection
+        const courseYears = {
+            bca: ['1', '2', '3'],
+            bba: ['1', '2', '3'],
+            btech: ['1', '2', '3', '4'],
+            mtech: ['1', '2'],
+            mba: ['1', '2'],
+            law: ['1', '2', '3', '4', '5'],
+            'class11-12': ['11', '12']
+        };
+
+        const courseSelect = document.getElementById('course');
+        const yearSelect = document.getElementById('year');
+
+        courseSelect.addEventListener('change', () => {
+            const course = courseSelect.value;
+            yearSelect.innerHTML = '<option value="" disabled selected>Select Year</option>';
+            if (course && courseYears[course]) {
+                courseYears[course].forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = course === 'class11-12' ? `Class ${year}` : `Year ${year}`;
+                    yearSelect.appendChild(option);
+                });
+            }
+        });
+
+        // User Form Submission
+        document.getElementById('user-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const university = document.getElementById('university').value;
+            const course = document.getElementById('course').value;
+            const year = document.getElementById('year').value;
+
+            localStorage.setItem('user', JSON.stringify({ name, university, course, year }));
+            initParticles(course);
+            loadDashboard(course, year, name);
+        });
+
+        // Load Dashboard
+        function loadDashboard(course, year, name) {
+            document.getElementById('welcome-section').classList.add('hidden');
+            const dashboard = document.getElementById('dashboard');
+            dashboard.classList.remove('hidden');
+            dashboard.classList.add(`${course}-theme`);
+            document.getElementById('content-area').innerHTML = `
+                <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">Welcome, ${name}</h2>
+                <p class="text-gray-300 light-theme:text-gray-600 mb-4">You're in ${course === 'class11-12' ? `Class ${year}` : `${course.toUpperCase()} Year ${year}`}. Explore your study tools!</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="neumorphic p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-white light-theme:text-gray-900">Quick Stats</h3>
+                        <p class="text-gray-300 light-theme:text-gray-600">Quizzes: ${progress.quizzes}</p>
+                        <p class="text-gray-300 light-theme:text-gray-600">Study Time: ${Math.floor(progress.studyTime / 60)}h ${progress.studyTime % 60}m</p>
+                        <p class="text-gray-300 light-theme:text-gray-600">Tasks: ${progress.tasks}</p>
+                    </div>
+                    <div class="neumorphic p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-white light-theme:text-gray-900">Next Task</h3>
+                        <p class="text-gray-300 light-theme:text-gray-600">${getNextTask() || 'No upcoming tasks'}</p>
+                    </div>
+                    <div class="neumorphic p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-white light-theme:text-gray-900">Recent Badge</h3>
+                        <p class="text-gray-300 light-theme:text-gray-600">${badges.length ? `<span class="badge">${badges[badges.length - 1]}</span>` : 'No badges yet'}</p>
+                    </div>
+                </div>
+            `;
+            setupDropdowns();
+            checkBadges();
+            gsap.from("#dashboard", { opacity: 0, y: 100, duration: 1 });
+        }
+
+        // Setup Dropdowns
+        function setupDropdowns() {
+            const dropdowns = [
+                { id: 'timetable-dropdown', button: document.querySelector('#timetable-dropdown').previousElementSibling },
+                { id: 'notes-dropdown', button: document.querySelector('#notes-dropdown').previousElementSibling },
+                { id: 'papers-dropdown', button: document.querySelector('#papers-dropdown').previousElementSibling },
+                { id: 'quizzes-dropdown', button: document.querySelector('#quizzes-dropdown').previousElementSibling },
+                { id: 'syllabus-dropdown', button: document.querySelector('#syllabus-dropdown').previousElementSibling },
+                { id: 'tools-dropdown', button: document.querySelector('#tools-dropdown').previousElementSibling }
+            ];
+
+            dropdowns.forEach(dropdown => {
+                dropdown.button.addEventListener('click', () => {
+                    dropdowns.forEach(other => {
+                        if (other.id !== dropdown.id) {
+                            document.getElementById(other.id).classList.add('hidden');
+                        }
+                    });
+                    const menu = document.getElementById(dropdown.id);
+                    menu.classList.toggle('hidden');
+                    if (!menu.classList.contains('hidden')) {
+                        gsap.from(menu, { opacity: 0, y: -20, duration: 0.5 });
+                    }
+                });
+            });
+
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                localStorage.removeItem('user');
+                localStorage.removeItem('tasks');
+                localStorage.removeItem('customNotes');
+                localStorage.removeItem('uploadedFiles');
+                localStorage.removeItem('progress');
+                localStorage.removeItem('badges');
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('timetable-page').classList.add('hidden');
+                document.getElementById('note-editor-page').classList.add('hidden');
+                document.getElementById('calendar-page').classList.add('hidden');
+                document.getElementById('welcome-section').classList.remove('hidden');
+                document.getElementById('user-form').reset();
+                initParticles();
+            });
+        }
+
+        // Load Content
+        function loadContent(type) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const data = courseData[user.course].years[user.year];
+            const contentArea = document.getElementById('content-area');
+            let content = `<h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">${type.charAt(0).toUpperCase() + type.slice(1)}</h2>`;
+
+            if (type === 'notes') {
+                content += `
+                    <h3 class="text-lg font-semibold text-white light-theme:text-gray-900 mb-2">Preloaded Notes</h3>
+                    <ul class="space-y-2 mb-4">${data.notes.map(note => `<li class="p-2 neumorphic rounded-lg text-gray-200 light-theme:text-gray-700">${note}</li>`).join('')}</ul>
+                    <h3 class="text-lg font-semibold text-white light-theme:text-gray-900 mb-2">Your Notes</h3>
+                    <ul class="space-y-2">${customNotes.filter(note => note.course === user.course && note.year === user.year).map(note => `
+                        <li class="p-2 neumorphic rounded-lg text-gray-200 light-theme:text-gray-700 flex justify-between">
+                            ${note.title}
+                            <div>
+                                <button onclick="viewNote('${note.title}')" class="text-blue-400 hover:text-blue-300 mr-2">View</button>
+                                <button onclick="deleteNote('${note.title}')" class="text-red-400 hover:text-red-300">Delete</button>
+                            </div>
+                        </li>
+                    `).join('')}</ul>
+                `;
+            } else if (type === 'papers') {
+                content += `
+                    <h3 class="text-lg font-semibold text-white light-theme:text-gray-900 mb-2">Preloaded Papers</h3>
+                    <ul class="space-y-2 mb-4">${data.papers.map(paper => `<li class="p-2 neumorphic rounded-lg text-gray-200 light-theme:text-gray-700">${paper}</li>`).join('')}</ul>
+                    <h3 class="text-lg font-semibold text-white light-theme:text-gray-900 mb-2">Uploaded Papers</h3>
+                    <ul class="space-y-2">${uploadedFiles.filter(file => file.type === 'paper' && file.course === user.course && file.year === user.year).map(file => `
+                        <li class="p-2 neumorphic rounded-lg text-gray-200 light-theme:text-gray-700 flex justify-between">
+                            ${file.name}
+                            <div>
+                                <button onclick="viewFile('${file.name}')" class="text-blue-400 hover:text-blue-300 mr-2">View</button>
+                                <button onclick="deleteFile('${file.name}')" class="text-red-400 hover:text-red-300">Delete</button>
+                            </div>
+                        </li>
+                    `).join('')}</ul>
+                `;
+            } else if (type === 'quizzes') {
+                content += `<div class="space-y-4">${data.quizzes.map((quiz, index) => `
+                    <div class="neumorphic p-4 rounded-lg quiz-option">
+                        <p class="font-semibold text-white light-theme:text-gray-900">${quiz.question}</p>
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            ${quiz.options.map(opt => `
+                                <button onclick="checkAnswer(${index}, '${opt}')" class="p-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white">${opt}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('')}</div>`;
+            } else if (type === 'syllabus') {
+                content += `<p class="text-gray-200 light-theme:text-gray-700">${data.syllabus}</p>`;
+            }
+
+            contentArea.innerHTML = content;
+            gsap.from(contentArea.children, { opacity: 0, y: 20, stagger: 0.1, duration: 0.5 });
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        }
+
+        // Load Timetable Page
+        function loadTimetablePage() {
+            document.getElementById('dashboard').classList.add('hidden');
+            const timetablePage = document.getElementById('timetable-page');
+            timetablePage.classList.remove('hidden');
+            timetablePage.classList.add(`${JSON.parse(localStorage.getItem('user')).course}-theme`);
+            renderTimetable();
+            gsap.from("#timetable-page", { opacity: 0, y: 100, duration: 1 });
+
+            document.getElementById('add-task-btn').addEventListener('click', () => {
+                document.getElementById('task-modal').classList.remove('hidden');
+                gsap.from("#task-modal", { opacity: 0, scale: 0.8, duration: 0.5 });
+            });
+
+            document.getElementById('back-btn').addEventListener('click', () => {
+                document.getElementById('timetable-page').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                gsap.from("#dashboard", { opacity: 0, y: 100, duration: 1 });
+            });
+
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        }
+
+        // Render Timetable
+        function renderTimetable() {
+            const visualizer = document.getElementById('timetable-visualizer');
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            visualizer.innerHTML = days.map(day => `
+                <div class="task-slot neumorphic">
+                    <h3 class="font-semibold text-white light-theme:text-gray-900">${day}</h3>
+                    <div>${tasks.filter(task => task.day === day).map((task, index) => `
+                        <div class="p-2 bg-blue-600 bg-opacity-20 rounded mt-2 text-gray-200 light-theme:text-gray-700">
+                            ${task.date} ${task.time} - ${task.subject}
+                            <button onclick="deleteTask(${tasks.indexOf(task)})" class="ml-2 text-red-400 hover:text-red-300">Delete</button>
+                        </div>
+                    `).join('')}</div>
+                </div>
+            `).join('');
+        }
+
+        // Load Calendar Page
+        function loadCalendarPage() {
+            document.getElementById('dashboard').classList.add('hidden');
+            const calendarPage = document.getElementById('calendar-page');
+            calendarPage.classList.remove('hidden');
+            calendarPage.classList.add(`${JSON.parse(localStorage.getItem('user')).course}-theme`);
+            renderCalendar();
+            gsap.from("#calendar-page", { opacity: 0, y: 100, duration: 1 });
+
+            document.getElementById('back-to-dashboard-calendar').addEventListener('click', () => {
+                document.getElementById('calendar-page').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                gsap.from("#dashboard", { opacity: 0, y: 100, duration: 1 });
+            });
+
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        }
+
+        // Render Calendar
+        function renderCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: tasks.map(task => ({
+                    title: task.subject,
+                    start: `${task.date}T${task.time}`,
+                    allDay: false
+                })),
+                eventClick: function(info) {
+                    const taskIndex = tasks.findIndex(t => t.subject === info.event.title && t.date === info.event.startStr.split('T')[0]);
+                    if (confirm(`Delete task "${info.event.title}"?`)) {
+                        deleteTask(taskIndex);
+                        info.event.remove();
+                    }
+                },
+                dateClick: function(info) {
+                    document.getElementById('task-modal').classList.remove('hidden');
+                    document.getElementById('date').value = info.dateStr;
+                    gsap.from("#task-modal", { opacity: 0, scale: 0.8, duration: 0.5 });
+                }
+            });
+            calendar.render();
+        }
+
+        // Task Management
+        document.getElementById('task-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const day = document.getElementById('day').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const subject = document.getElementById('subject').value;
+
+            tasks.push({ day, date, time, subject });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            progress.tasks++;
+            localStorage.setItem('progress', JSON.stringify(progress));
+            checkBadges();
+            renderTimetable();
+            document.getElementById('task-modal').classList.add('hidden');
+            document.getElementById('task-form').reset();
+            setAlarm(day, date, time, subject);
+        });
+
+        document.getElementById('cancel-task').addEventListener('click', () => {
+            document.getElementById('task-modal').classList.add('hidden');
+            document.getElementById('task-form').reset();
+        });
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            progress.tasks = Math.max(0, progress.tasks - 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('progress', JSON.stringify(progress));
+            renderTimetable();
+            if (document.getElementById('calendar-page').classList.contains('hidden')) return;
+            renderCalendar();
+        }
+
+        // Alarm Functionality
+        function setAlarm(day, date, time, subject) {
+            const alarmTime = new Date(`${date}T${time}:00`);
+            const now = new Date();
+            const timeUntilAlarm = alarmTime.getTime() - now.getTime();
+            if (timeUntilAlarm > 0) {
+                setTimeout(() => {
+                    alert(`Time to study ${subject}!`);
+                    if (Notification.permission === "granted") {
+                        new Notification(`StudyBuddy Reminder: ${subject}`, {
+                            body: `It's time to study ${subject} on ${day}!`,
+                        });
+                    } else if (Notification.permission !== "denied") {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === "granted") {
+                                new Notification(`StudyBuddy Reminder: ${subject}`, {
+                                    body: `It's time to study ${subject} on ${day}!`,
+                                });
+                            }
+                        });
+                    }
+                }, timeUntilAlarm);
+            }
+        }
+
+        // Get Next Task
+        function getNextTask() {
+            const now = new Date();
+            let nextTask = null;
+            let minTimeDiff = Infinity;
+
+            tasks.forEach(task => {
+                const taskTime = new Date(`${task.date}T${task.time}:00`);
+                const timeDiff = taskTime.getTime() - now.getTime();
+                if (timeDiff > 0 && timeDiff < minTimeDiff) {
+                    minTimeDiff = timeDiff;
+                    nextTask = `${task.day}, ${task.date} at ${task.time}: ${task.subject}`;
+                }
+            });
+
+            return nextTask;
+        }
+
+        // Quiz Answer Checking
+        function checkAnswer(quizIndex, selectedOption) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const quiz = courseData[user.course].years[user.year].quizzes[quizIndex];
+            if (selectedOption === quiz.answer) {
+                progress.quizzes++;
+                localStorage.setItem('progress', JSON.stringify(progress));
+                checkBadges();
+                alert("Correct!");
+            } else {
+                alert("Incorrect, try again!");
+            }
+        }
+
+        // Study Timer
+        let timerInterval;
+        function startStudyTimer() {
+            document.getElementById('study-timer-modal').classList.remove('hidden');
+            gsap.from("#study-timer-modal", { opacity: 0, scale: 0.8, duration: 0.5 });
+
+            let timeLeft = 25 * 60;
+            const timerDisplay = document.getElementById('timer-display');
+
+            function updateTimer() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timerDisplay.classList.toggle('light-theme:text-gray-900', isLightTheme);
+                if (timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    progress.studyTime += 25;
+                    localStorage.setItem('progress', JSON.stringify(progress));
+                    checkBadges();
+                    alert("Study session complete!");
+                }
+                timeLeft--;
+            }
+
+            document.getElementById('start-timer').addEventListener('click', () => {
+                if (!timerInterval) {
+                    timerInterval = setInterval(updateTimer, 1000);
+                }
+            });
+
+            document.getElementById('reset-timer').addEventListener('click', () => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timeLeft = 25 * 60;
+                timerDisplay.textContent = "25:00";
+            });
+
+            document.getElementById('close-timer').addEventListener('click', () => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                document.getElementById('study-timer-modal').classList.add('hidden');
+            });
+        }
+
+        // Note Editor
+        let quill;
+        function loadNoteEditor() {
+            document.getElementById('dashboard').classList.add('hidden');
+            const noteEditorPage = document.getElementById('note-editor-page');
+            noteEditorPage.classList.remove('hidden');
+            noteEditorPage.classList.add(`${JSON.parse(localStorage.getItem('user')).course}-theme`);
+            gsap.from("#note-editor-page", { opacity: 0, y: 100, duration: 1 });
+
+            if (!quill) {
+                quill = new Quill('#editor', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['link', 'image', 'code-block'],
+                            [{ 'header': [1, 2, 3, false] }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['clean']
+                        ]
+                    }
+                });
+            }
+
+            document.getElementById('save-note').addEventListener('click', () => {
+                const title = document.getElementById('note-title').value;
+                const content = quill.root.innerHTML;
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (title) {
+                    customNotes.push({ title, content, course: user.course, year: user.year });
+                    localStorage.setItem('customNotes', JSON.stringify(customNotes));
+                    checkBadges();
+                    alert("Note saved!");
+                    document.getElementById('note-title').value = '';
+                    quill.setContents([]);
+                } else {
+                    alert("Please enter a note title.");
+                }
+            });
+
+            document.getElementById('back-to-dashboard').addEventListener('click', () => {
+                document.getElementById('note-editor-page').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                gsap.from("#dashboard", { opacity: 0, y: 100, duration: 1 });
+            });
+        }
+
+        // View Note
+        function viewNote(title) {
+            const note = customNotes.find(n => n.title === title);
+            if (note) {
+                const contentArea = document.getElementById('content-area');
+                contentArea.innerHTML = `
+                    <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">${note.title}</h2>
+                    <div class="text-gray-200 light-theme:text-gray-700">${note.content}</div>
+                `;
+                gsap.from(contentArea.children, { opacity: 0, y: 20, stagger: 0.1, duration: 0.5 });
+            }
+        }
+
+        // Delete Note
+        function deleteNote(title) {
+            customNotes = customNotes.filter(n => n.title !== title);
+            localStorage.setItem('customNotes', JSON.stringify(customNotes));
+            loadContent('notes');
+        }
+
+        // File Upload
+        function uploadFile(type) {
+            document.getElementById('file-upload-modal').classList.remove('hidden');
+            document.getElementById('file-upload-title').textContent = `Upload ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+            gsap.from("#file-upload-modal", { opacity: 0, scale: 0.8, duration: 0.5 });
+
+            document.getElementById('file-upload-form').onsubmit = (e) => {
+                e.preventDefault();
+                const fileInput = document.getElementById('file-input');
+                const fileName = document.getElementById('file-name').value;
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (fileInput.files.length && fileName) {
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        uploadedFiles.push({ name: fileName, type, course: user.course, year: user.year, data: reader.result });
+                        localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                        checkBadges();
+                        alert(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`);
+                        document.getElementById('file-upload-modal').classList.add('hidden');
+                        document.getElementById('file-upload-form').reset();
+                        loadContent(type + 's');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert("Please select a file and enter a name.");
+                }
+            };
+
+            document.getElementById('cancel-upload').addEventListener('click', () => {
+                document.getElementById('file-upload-modal').classList.add('hidden');
+                document.getElementById('file-upload-form').reset();
+            });
+        }
+
+        // View File
+        function viewFile(name) {
+            const file = uploadedFiles.find(f => f.name === name);
+            if (file) {
+                const link = document.createElement('a');
+                link.href = file.data;
+                link.download = name;
+                link.click();
+            }
+        }
+
+        // Delete File
+        function deleteFile(name) {
+            uploadedFiles = uploadedFiles.filter(f => f.name !== name);
+            localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+            loadContent('papers');
+        }
+
+        // Progress Tracker
+        function viewProgress() {
+            const contentArea = document.getElementById('content-area');
+            const quizzesProgress = Math.min((progress.quizzes / 15) * 100, 100);
+            const studyProgress = Math.min((progress.studyTime / (60 * 15)) * 100, 100);
+            const tasksProgress = Math.min((progress.tasks / 50) * 100, 100);
+            contentArea.innerHTML = `
+                <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">Progress Tracker</h2>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-gray-200 light-theme:text-gray-700 mb-2">Quizzes Completed: ${progress.quizzes}/15</p>
+                        <div class="progress-bar h-4">
+                            <div class="progress-fill" style="width: ${quizzesProgress}%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-200 light-theme:text-gray-700 mb-2">Study Time: ${Math.floor(progress.studyTime / 60)}h ${progress.studyTime % 60}m/15h</p>
+                        <div class="progress-bar h-4">
+                            <div class="progress-fill" style="width: ${studyProgress}%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-gray-200 light-theme:text-gray-700 mb-2">Tasks Completed: ${progress.tasks}/50</p>
+                        <div class="progress-bar h-4">
+                            <div class="progress-fill" style="width: ${tasksProgress}%"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            gsap.from(contentArea.children, { opacity: 0, y: 20, stagger: 0.1, duration: 0.5 });
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        }
+
+        // Badges System
+        function checkBadges() {
+            const newBadges = [];
+            if (progress.quizzes >= 5 && !badges.includes('Quiz Master')) newBadges.push('Quiz Master');
+            if (progress.studyTime >= 60 && !badges.includes('Study Star')) newBadges.push('Study Star');
+            if (progress.tasks >= 10 && !badges.includes('Task Titan')) newBadges.push('Task Titan');
+            if (customNotes.length >= 3 && !badges.includes('Note Ninja')) newBadges.push('Note Ninja');
+            if (uploadedFiles.length >= 2 && !badges.includes('File Wizard')) newBadges.push('File Wizard');
+
+            if (newBadges.length) {
+                badges.push(...newBadges);
+                localStorage.setItem('badges', JSON.stringify(badges));
+                alert(`Congratulations! You've earned: ${newBadges.join(', ')}`);
+            }
+        }
+
+        function viewBadges() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <h2 class="text-2xl font-semibold mb-4 text-white light-theme:text-gray-900">Your Badges</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    ${badges.length ? badges.map(badge => `
+                        <div class="neumorphic p-4 rounded-lg text-center">
+                            <span class="badge">${badge}</span>
+                        </div>
+                    `).join('') : '<p class="text-gray-200 light-theme:text-gray-700">No badges yet. Keep studying!</p>'}
+                </div>
+            `;
+            gsap.from(contentArea.children, { opacity: 0, y: 20, stagger: 0.1, duration: 0.5 });
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        }
+
+        // Service Worker for Offline Support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(reg => {
+                console.log('Service Worker registered', reg);
+            }).catch(err => {
+                console.error('Service Worker registration failed', err);
+            });
+        }
+
+        // Check if user is logged in
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            initParticles(user.course);
+            loadDashboard(user.course, user.year, user.name);
+        }
+    </script>
+</body>
+</html>
