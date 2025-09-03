@@ -37,6 +37,8 @@ CSS3 – Styling and animations
 JavaScript (Vanilla) – Functionality and interactivity
 
 
+
+
 🎯 Usage
 
 Use the navigation bar to switch between Dashboard, Timetable, Notes, Quizzes, and Papers.
@@ -50,6 +52,7 @@ Attempt sample Quizzes for practice.
 Review Previous Year Papers to prepare for exams.
 
 
+
 🌱 Future Enhancements
 
 🔐 User login & authentication
@@ -59,6 +62,7 @@ Review Previous Year Papers to prepare for exams.
 📊 Analytics to track progress
 
 📱 Convert into a Progressive Web App (PWA)
+
 
 
 🤝 Contributing
