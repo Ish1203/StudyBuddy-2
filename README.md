@@ -59,7 +59,7 @@ Review Previous Year Papers to prepare for exams.
 
 💾 Save tasks/notes using LocalStorage or a backend database
 
-📊 Analytics to track progress
+📊 Analytics to track progress.
 
 📱 Convert into a Progressive Web App (PWA)
 
