@@ -1,4 +1,4 @@
-# 📚 StudyBuddy – All-in-One Version  
+# 📚 StudyBuddy – All-in-One Version
 
 This is the **single-file version** of StudyBuddy – a smart academic companion for students.  
 Unlike the modular version (with separate HTML/CSS/JS files), this version contains **all code in one file** for quick setup and easy portability.  
