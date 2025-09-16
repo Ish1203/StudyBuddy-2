@@ -17,7 +17,7 @@ Unlike the modular version (with separate HTML/CSS/JS files), this version conta
 
 ---
 
-## 📂 Project Structure  
+## 📂 Project Structure 
 
 Since this is an all-in-one file, the structure is very simple:  
 
